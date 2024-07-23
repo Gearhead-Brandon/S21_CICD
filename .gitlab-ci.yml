@@ -1,0 +1,54 @@
+default:
+  tags:
+    - cicd
+
+stages:
+  - style
+  - build
+  - tests
+  - deploy
+
+style:
+  stage: style
+  script: 
+    - (cd src/cat && clang-format -Werror -n *.c *.h)
+    - (cd src/grep && clang-format -Werror -n *.c *.h)
+  tags:
+    - cicd
+  allow_failure: false
+
+build:
+  stage: build
+  script:
+    - rm -rf artifacts
+    - mkdir artifacts
+    - (cd src/cat && make s21_cat)
+    - (cd src/grep && make s21_grep)
+    - cp src/cat/s21_cat src/grep/s21_grep artifacts
+  artifacts:
+    paths:
+      - artifacts
+    expire_in: 30 days
+  tags:
+    - cicd
+  allow_failure: false
+
+
+tests:
+  stage: tests
+  script:
+    - (cd src/cat && make s21_cat && make test)
+    - (cd src/grep && make s21_grep && make test)
+  tags:
+    - cicd
+  allow_failure: false
+
+deploy:
+  stage: deploy
+  script:
+    - (cd src && bash scp.sh)
+  tags:
+    - cicd
+  allow_failure: false
+  after_script:
+    - bash src/tg_notifications.sh "deploy"
