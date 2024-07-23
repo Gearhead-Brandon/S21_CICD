@@ -1,8 +1,7 @@
 #!/bin/bash
 
-token_bot="6759352631:AAHPtHocoYIjnl1LSj7wDln5Sanqmyp1PqE"
-TELEGRAM_BOT_TOKEN="6759352631:AAHPtHocoYIjnl1LSj7wDln5Sanqmyp1PqE"
-TELEGRAM_USER_ID="458979666"
+source env.sh
+
 TIME=8
 URL="https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage"
 TEXT="PROJECT: $1%0A%0AProject:+$CI_PROJECT_NAME%0AJOB_STAGE:$CI_JOB_STAGE
